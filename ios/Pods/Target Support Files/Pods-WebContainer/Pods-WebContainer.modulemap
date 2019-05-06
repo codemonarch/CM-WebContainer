@@ -1,0 +1,6 @@
+framework module Pods_WebContainer {
+  umbrella header "Pods-WebContainer-umbrella.h"
+
+  export *
+  module * { export * }
+}

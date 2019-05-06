@@ -1,0 +1,20 @@
+PODS:
+  - sfunctional (0.9.0)
+  - WebViewJavascriptBridge (6.0.3)
+
+DEPENDENCIES:
+  - sfunctional
+  - WebViewJavascriptBridge
+
+SPEC REPOS:
+  https://github.com/rarnu/RarnuSpecs.git:
+    - sfunctional
+    - WebViewJavascriptBridge
+
+SPEC CHECKSUMS:
+  sfunctional: 710dbc7cbc9b92da24e3cac433d71481407b3722
+  WebViewJavascriptBridge: da4884a3e2baa5053f25460d7b8e04b9dd523d7a
+
+PODFILE CHECKSUM: de7838093d1d2211312470c24a0a1e55a845f3b4
+
+COCOAPODS: 1.5.3
