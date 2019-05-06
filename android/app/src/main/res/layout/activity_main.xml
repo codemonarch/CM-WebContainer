@@ -6,6 +6,16 @@
 
     <com.rarnu.web.WebContainer
             android:id="@+id/wc"
-            android:layout_width="match_parent" android:layout_height="match_parent">
+            android:layout_width="match_parent" android:layout_height="match_parent"
+            android:layout_above="@+id/btnCall"
+    >
     </com.rarnu.web.WebContainer>
+    <Button
+            android:id="@+id/btnCall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Call JS">
+
+    </Button>
 </RelativeLayout>

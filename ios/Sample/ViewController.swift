@@ -34,10 +34,14 @@ class ViewController: UIViewController, WebContainerDelegate {
         }
     }
 
-    func onJsCall(_ param: [String : Any]) -> [String : Any] {
-        let a = param["a"] as! Int
-        let b = param["b"] as! Int
-        return ["a": a * 2, "b": b * 3]
+    func onJsCall(_ param: [String : Any]?) -> [String : Any]? {
+        var ret: [String: Any]?
+        if (param != nil) {
+            let a = param!["a"] as! Int
+            let b = param!["b"] as! Int
+            ret = ["a": a * 2, "b": b * 3]
+        }
+        return ret
     }
 
 }

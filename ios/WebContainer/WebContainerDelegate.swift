@@ -9,5 +9,5 @@
 import UIKit
 
 @objc public protocol WebContainerDelegate: NSObjectProtocol {
-    @objc optional func onJsCall(_ param: [String: Any]) -> [String: Any]
+    @objc optional func onJsCall(_ param: [String: Any]?) -> [String: Any]?
 }

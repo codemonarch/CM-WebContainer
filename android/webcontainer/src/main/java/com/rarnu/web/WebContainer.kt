@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.AttributeSet
-import android.util.Log
 import android.view.KeyEvent
 import android.view.ViewGroup
 import android.webkit.*
@@ -16,6 +15,9 @@ import android.widget.RelativeLayout
 class WebContainer: RelativeLayout {
 
     private lateinit var wv: WebView
+
+    var delegate: WebContainerDelegate? = null
+
     private lateinit var btnBack: ImageButton
     private lateinit var bntShare: ImageButton
 
@@ -29,6 +31,7 @@ class WebContainer: RelativeLayout {
     private fun initSettings() {
         wv = WebView(context)
         wv.layoutParams = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        wv.addJavascriptInterface(JsObject(), "android")
         addView(wv)
 
         with(wv.settings) {
@@ -65,6 +68,16 @@ class WebContainer: RelativeLayout {
 
     fun load(url: String) = wv.loadUrl(url)
 
+    fun loadLocal(filename: String) = wv.loadUrl("file:///android_asset/$filename")
+
+    fun callJs(data: Map<String, Any>?, callback: (Map<String, Any?>?) -> Unit) {
+        val str = data?.toJSONString()
+        wv.evaluateJavascript("javascript:device2js('$str');") {
+            val sBack = it?.replace("\\\"", "\"")?.trim('\"')
+            callback(sBack?.toMap())
+        }
+    }
+
     inner class CMWebViewClient: WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
             return super.shouldOverrideUrlLoading(view, request)
@@ -80,6 +93,7 @@ class WebContainer: RelativeLayout {
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
+            JsInject.inject(wv)
         }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -114,6 +128,22 @@ class WebContainer: RelativeLayout {
 
         override fun onJsConfirm(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
             return super.onJsConfirm(view, url, message, result)
+        }
+    }
+
+    inner class JsObject {
+
+        @JavascriptInterface
+        fun js2device(data: String?): String? {
+            var ret: Map<String, Any?>? = null
+            var retstr: String? = null
+            if (delegate != null) {
+                ret = delegate!!.onJsCall(data?.toMap())
+            }
+            if (ret != null) {
+                retstr = ret.toJSONString()
+            }
+            return retstr
         }
     }
 }

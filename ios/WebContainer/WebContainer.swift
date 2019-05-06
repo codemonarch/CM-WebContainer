@@ -48,7 +48,7 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         bridge.registerHandler("js2device", handler: { (data, responseCallback) in
             if (self.delegate != nil) {
                 if (self.delegate!.responds(to: #selector(self.delegate?.onJsCall(_:)))) {
-                    let d = self.delegate!.onJsCall!(data as! [String: Any])
+                    let d = self.delegate!.onJsCall!(data as? [String: Any])
                     if (responseCallback != nil) {
                         responseCallback!(d)
                     }
