@@ -5,12 +5,12 @@
     <script>
         function testCall() {
             document.getElementById("divcall").innerHTML = "calling";
-            device({a:1, b:2}, function(data) {
+            device("sample", {a:1, b:2}, function(data) {
                 document.getElementById("result").innerHTML = "a: " + data.a + ", b: " + data.b;
             });
         }
-        function fromDevice(data) {
-            document.getElementById("called").innerHTML = "p1: " + data.p1 + ", p2: " + data.p2;
+        function fromDevice(routing, data) {
+            document.getElementById("called").innerHTML = "routing: " + routing + ", p1: " + data.p1 + ", p2: " + data.p2;
             return { ret: 'Right back atcha!' };
         }
     </script>

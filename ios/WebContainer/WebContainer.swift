@@ -47,8 +47,11 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
 
         bridge.registerHandler("js2device", handler: { (data, responseCallback) in
             if (self.delegate != nil) {
-                if (self.delegate!.responds(to: #selector(self.delegate?.onJsCall(_:)))) {
-                    let d = self.delegate!.onJsCall!(data as? [String: Any])
+                if (self.delegate!.responds(to: #selector(self.delegate?.onJsCall(_:_:)))) {
+                    var p = data as! [String: Any]
+                    let routing = p["__routing__"] as! String
+                    p.removeValue(forKey: "__routing__")
+                    let d = self.delegate!.onJsCall!(routing, p)
                     if (responseCallback != nil) {
                         responseCallback!(d)
                     }
@@ -73,9 +76,14 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         wv.loadFileURL(pathURL, allowingReadAccessTo: bundleURL)
     }
     
-    public func callJs(data: [String: Any], callback:@escaping ([String: Any]) -> Void) {
-        bridge.callHandler("device2js", data: data) { resp in
-            let retData = resp as! [String: Any]
+    public func callJs(_ routing:String, _ data: [String: Any]?, callback:@escaping ([String: Any]?) -> Void) {
+        var p = [String: Any]()
+        p["__routing__"] = routing
+        data?.forEach { k, v in
+            p[k] = v
+        }
+        bridge.callHandler("device2js", data: p) { resp in
+            let retData = resp as? [String: Any]
             callback(retData)
         }
     }

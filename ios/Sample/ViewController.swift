@@ -29,12 +29,12 @@ class ViewController: UIViewController, WebContainerDelegate {
     }
     
     @objc func btnClicked(_ sender: Any) {
-        wc.callJs(data: ["p1":"666", "p2":"777"]) { resp in
+        wc.callJs("sample", ["p1":"666", "p2":"777"]) { resp in
             print("callvack from js: ", resp)
         }
     }
-
-    func onJsCall(_ param: [String : Any]?) -> [String : Any]? {
+    
+    func onJsCall(_ routing: String, _ param: [String : Any]?) -> [String : Any]? {
         var ret: [String: Any]?
         if (param != nil) {
             let a = param!["a"] as! Int

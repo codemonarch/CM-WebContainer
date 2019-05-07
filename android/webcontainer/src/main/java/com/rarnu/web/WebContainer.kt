@@ -11,8 +11,10 @@ import android.webkit.*
 import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import com.rarnu.kt.android.runOnMainThread
+import kotlin.concurrent.thread
 
-class WebContainer: RelativeLayout {
+class WebContainer : RelativeLayout {
 
     private lateinit var wv: WebView
 
@@ -21,9 +23,9 @@ class WebContainer: RelativeLayout {
     private lateinit var btnBack: ImageButton
     private lateinit var bntShare: ImageButton
 
-    constructor(context: Context): this(context, null)
+    constructor(context: Context) : this(context, null)
 
-    constructor(context: Context, attrs: AttributeSet?): super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         initSettings()
     }
 
@@ -70,15 +72,15 @@ class WebContainer: RelativeLayout {
 
     fun loadLocal(filename: String) = wv.loadUrl("file:///android_asset/$filename")
 
-    fun callJs(data: Map<String, Any>?, callback: (Map<String, Any?>?) -> Unit) {
+    fun callJs(routing: String, data: Map<String, Any>?, callback: (Map<String, Any?>?) -> Unit) {
         val str = data?.toJSONString()
-        wv.evaluateJavascript("javascript:device2js('$str');") {
+        wv.evaluateJavascript("javascript:device2js('$routing', '$str');") {
             val sBack = it?.replace("\\\"", "\"")?.trim('\"')
             callback(sBack?.toMap())
         }
     }
 
-    inner class CMWebViewClient: WebViewClient() {
+    inner class CMWebViewClient : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
             return super.shouldOverrideUrlLoading(view, request)
         }
@@ -93,7 +95,7 @@ class WebContainer: RelativeLayout {
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
-            JsInject.inject(wv)
+            JsInjection.inject(wv)
         }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -113,7 +115,7 @@ class WebContainer: RelativeLayout {
         }
     }
 
-    inner class CMChromeClient: WebChromeClient() {
+    inner class CMChromeClient : WebChromeClient() {
         override fun onShowFileChooser(
             webView: WebView?,
             filePathCallback: ValueCallback<Array<Uri>>?,
@@ -134,11 +136,11 @@ class WebContainer: RelativeLayout {
     inner class JsObject {
 
         @JavascriptInterface
-        fun js2device(data: String?): String? {
+        fun js2device(routing: String, data: String?): String? {
             var ret: Map<String, Any?>? = null
             var retstr: String? = null
             if (delegate != null) {
-                ret = delegate!!.onJsCall(data?.toMap())
+                ret = delegate!!.onJsCall(routing, data?.toMap())
             }
             if (ret != null) {
                 retstr = ret.toJSONString()

@@ -19,7 +19,7 @@ class MainActivity : Activity(), WebContainerDelegate, View.OnClickListener {
         btnCall.setOnClickListener(this)
     }
 
-    override fun onJsCall(param: Map<String, Any?>?): Map<String, Any?>? {
+    override fun onJsCall(routing: String, param: Map<String, Any?>?): Map<String, Any?>? {
         var ret: Map<String, Any>? = null
         if (param != null) {
             val a = param["a"] as Int
@@ -30,7 +30,7 @@ class MainActivity : Activity(), WebContainerDelegate, View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        wc.callJs(mapOf("p1" to 666, "p2" to 777)) {
+        wc.callJs("sample", mapOf("p1" to 666, "p2" to 777)) {
             Log.e("Callback", "from js => $it")
         }
     }
