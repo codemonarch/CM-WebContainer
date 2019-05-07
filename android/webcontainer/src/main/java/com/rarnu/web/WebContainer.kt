@@ -11,14 +11,10 @@ import android.webkit.*
 import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 import android.widget.ImageButton
 import android.widget.RelativeLayout
-import com.rarnu.kt.android.runOnMainThread
-import kotlin.concurrent.thread
 
 class WebContainer : RelativeLayout {
 
     private lateinit var wv: WebView
-
-    var delegate: WebContainerDelegate? = null
 
     private lateinit var btnBack: ImageButton
     private lateinit var bntShare: ImageButton
@@ -137,10 +133,11 @@ class WebContainer : RelativeLayout {
 
         @JavascriptInterface
         fun js2device(routing: String, data: String?): String? {
-            var ret: Map<String, Any?>? = null
+            var ret: Map<String, Any>? = null
             var retstr: String? = null
-            if (delegate != null) {
-                ret = delegate!!.onJsCall(routing, data?.toMap())
+            val executer = JsRouting.find(routing)
+            if (executer != null) {
+                ret = executer.execute(data?.toMap())
             }
             if (ret != null) {
                 retstr = ret.toJSONString()

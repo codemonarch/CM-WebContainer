@@ -4,29 +4,27 @@ import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.rarnu.web.WebContainerDelegate
+import com.rarnu.web.JsRouting
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : Activity(), WebContainerDelegate, View.OnClickListener {
+class MainActivity : Activity(), View.OnClickListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        wc.delegate = this
         wc.loadLocal("index.html")
-
         btnCall.setOnClickListener(this)
-    }
 
-    override fun onJsCall(routing: String, param: Map<String, Any?>?): Map<String, Any?>? {
-        var ret: Map<String, Any>? = null
-        if (param != null) {
-            val a = param["a"] as Int
-            val b = param["b"] as Int
-            ret = mapOf("a" to a * 2, "b" to b * 3)
+        JsRouting.registerRouting("sample") {
+            var ret: Map<String, Any>? = null
+            if (it != null) {
+                val a = it["a"] as Int
+                val b = it["b"] as Int
+                ret = mapOf("a" to a * 2, "b" to b * 3)
+            }
+            ret
         }
-        return ret
     }
 
     override fun onClick(v: View?) {
