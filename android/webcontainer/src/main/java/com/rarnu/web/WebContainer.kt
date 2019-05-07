@@ -5,16 +5,22 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.AttributeSet
-import android.view.KeyEvent
+import android.util.Log
 import android.view.ViewGroup
 import android.webkit.*
 import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import com.rarnu.kt.android.alert
+import org.json.JSONObject
+import android.webkit.ValueCallback
 
 class WebContainer : RelativeLayout {
 
     private lateinit var wv: WebView
+
+    private var uploadMessage: ValueCallback<Array<Uri>>? = null
+    private var cookie: Map<String, Any>? = null
 
     private lateinit var btnBack: ImageButton
     private lateinit var bntShare: ImageButton
@@ -59,14 +65,42 @@ class WebContainer : RelativeLayout {
             webViewClient = CMWebViewClient()
             webChromeClient = CMChromeClient()
         }
+        // cookie
         CookieManager.setAcceptFileSchemeCookies(true)
         CookieManager.getInstance().setAcceptCookie(true)
         CookieManager.getInstance().setAcceptThirdPartyCookies(wv, true)
     }
 
-    fun load(url: String) = wv.loadUrl(url)
+    var acceptCookies: Boolean
+        get() = CookieManager.getInstance().acceptCookie()
+        set(value) {
+            CookieManager.setAcceptFileSchemeCookies(value)
+            CookieManager.getInstance().setAcceptCookie(value)
+            CookieManager.getInstance().setAcceptThirdPartyCookies(wv, value)
+        }
 
-    fun loadLocal(filename: String) = wv.loadUrl("file:///android_asset/$filename")
+    fun load(url: String) {
+        if (acceptCookies) {
+            val c = CookieManager.getInstance()
+            if (cookie != null) {
+                c.setCookie(url, cookie!!.toCookieString())
+            }
+            c.flush()
+        }
+        wv.loadUrl(url)
+    }
+
+    fun loadLocal(filename: String) {
+        val url = "file:///android_asset/$filename"
+        if (acceptCookies) {
+            val c = CookieManager.getInstance()
+            if (cookie != null) {
+                c.setCookie(url, cookie!!.toCookieString())
+            }
+            c.flush()
+        }
+        wv.loadUrl(url)
+    }
 
     fun callJs(routing: String, data: Map<String, Any>?, callback: (Map<String, Any?>?) -> Unit) {
         val str = data?.toJSONString()
@@ -77,55 +111,79 @@ class WebContainer : RelativeLayout {
     }
 
     inner class CMWebViewClient : WebViewClient() {
+
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-            return super.shouldOverrideUrlLoading(view, request)
+            if (request != null) {
+                view?.loadUrl(request.url.toString())
+            }
+            return true
         }
 
         override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
             return super.shouldInterceptRequest(view, request)
         }
 
-        override fun shouldOverrideKeyEvent(view: WebView?, event: KeyEvent?): Boolean {
-            return super.shouldOverrideKeyEvent(view, event)
-        }
-
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             JsInjection.inject(wv)
+            if (acceptCookies) {
+                val cookieString = CookieManager.getInstance().getCookie(url)
+                cookie = cookieString?.toCookie()
+            }
         }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
         }
 
-        override fun onLoadResource(view: WebView?, url: String?) {
-            super.onLoadResource(view, url)
-        }
-
         override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
             super.onReceivedError(view, request, error)
-        }
-
-        override fun onRenderProcessGone(view: WebView?, detail: RenderProcessGoneDetail?): Boolean {
-            return super.onRenderProcessGone(view, detail)
         }
     }
 
     inner class CMChromeClient : WebChromeClient() {
+
         override fun onShowFileChooser(
             webView: WebView?,
             filePathCallback: ValueCallback<Array<Uri>>?,
             fileChooserParams: FileChooserParams?
         ): Boolean {
-            return super.onShowFileChooser(webView, filePathCallback, fileChooserParams)
+            // TODO: select upload file
+            uploadMessage = filePathCallback
+
+            return true
         }
 
         override fun onJsAlert(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
-            return super.onJsAlert(view, url, message, result)
+            this@WebContainer.context.alert("Alert", "$message", "OK") { }
+            result?.cancel()
+            return true
         }
 
         override fun onJsConfirm(view: WebView?, url: String?, message: String?, result: JsResult?): Boolean {
-            return super.onJsConfirm(view, url, message, result)
+            this@WebContainer.context.alert("Confirm", "$message", "OK", "Cancel") {
+                when (it) {
+                    0 -> result?.confirm()
+                    1 -> result?.cancel()
+                }
+            }
+            return true
+        }
+
+        override fun onJsPrompt(
+            view: WebView?,
+            url: String?,
+            message: String?,
+            defaultValue: String?,
+            result: JsPromptResult?
+        ): Boolean {
+            this@WebContainer.context.alert("Input", "$message", "OK", "Cancel", "", defaultValue) { which, text ->
+                when (which) {
+                    0 -> result?.confirm(text)
+                    1 -> result?.cancel()
+                }
+            }
+            return true
         }
     }
 
@@ -146,3 +204,43 @@ class WebContainer : RelativeLayout {
         }
     }
 }
+
+private fun Map<String, Any>.toJSONString(): String {
+    var ret = "{"
+    this.keys.forEach {
+        ret += "\"$it\":"
+        val o = this[it]
+        ret += if (o is String) {
+            "\"${o.toJsonEncoded()}\","
+        } else {
+            "$o,"
+        }
+    }
+    ret = ret.trimEnd(',')
+    ret += "}"
+    return ret
+}
+
+private fun String.toMap(): Map<String, Any>? {
+    val m = mutableMapOf<String, Any>()
+    try {
+        val j = JSONObject(this)
+        j.keys().forEach {
+            val o = j[it]
+            if (o != null) {
+                m[it] = o
+            }
+        }
+    } catch (e: Exception) {
+        Log.e("String.toMap()", "Error: $e")
+    }
+    return m
+}
+
+private fun String.toJsonEncoded() = this.replace("\\", "\\\\").replace("\n", "\\n").replace("\"", "\\\"")
+
+private fun Map<String, Any>.toCookieString() = map { "${it.key}=${it.value}" }.joinToString(";")
+private fun String.toCookie() = split(";").map { it.trim() }.map {
+    val kv = it.split("=")
+    Pair<String, Any>(kv[0].trim(), kv[1].trim()) }.toMap()
+

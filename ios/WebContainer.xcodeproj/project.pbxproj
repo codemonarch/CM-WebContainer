@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7DED6C795B2756CEF7205CE9 /* Pods_Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F94202D0D0081F7AF9DF853 /* Pods_Sample.framework */; };
+		92320C9B2281447F00967376 /* JsRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92320C9A2281447F00967376 /* JsRouting.swift */; };
 		9235803A227ECE5700231810 /* WebContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92358039227ECE5700231810 /* WebContainer.swift */; };
 		92358041227ED0B000231810 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92358040227ED0B000231810 /* WebKit.framework */; };
 		924D5439227FF2DB00E95F5D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924D5438227FF2DB00E95F5D /* AppDelegate.swift */; };
@@ -19,7 +20,6 @@
 		924D544A227FF33600E95F5D /* WebContainer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92B0ABCD227ECDE2002ED0FF /* WebContainer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		924D544F227FF3D300E95F5D /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 924D544E227FF3D300E95F5D /* index.html */; };
 		924D54512280194100E95F5D /* JsInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924D54502280194100E95F5D /* JsInjection.swift */; };
-		924D5453228026EC00E95F5D /* WebContainerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924D5452228026EC00E95F5D /* WebContainerDelegate.swift */; };
 		9C930D257837A5CC13911BC3 /* Pods_WebContainer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F1F6513B267EC2031D4DDFF /* Pods_WebContainer.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -50,6 +50,7 @@
 /* Begin PBXFileReference section */
 		33FEFAD36D66F3AF910E3410 /* Pods-WebContainer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebContainer.release.xcconfig"; path = "Pods/Target Support Files/Pods-WebContainer/Pods-WebContainer.release.xcconfig"; sourceTree = "<group>"; };
 		882314E2C621E2698C8B65E0 /* Pods-Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-Sample/Pods-Sample.release.xcconfig"; sourceTree = "<group>"; };
+		92320C9A2281447F00967376 /* JsRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsRouting.swift; sourceTree = "<group>"; };
 		92358039227ECE5700231810 /* WebContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebContainer.swift; sourceTree = "<group>"; };
 		92358040227ED0B000231810 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		924D5436227FF2DB00E95F5D /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,7 +62,6 @@
 		924D5444227FF2DB00E95F5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		924D544E227FF3D300E95F5D /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		924D54502280194100E95F5D /* JsInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsInjection.swift; sourceTree = "<group>"; };
-		924D5452228026EC00E95F5D /* WebContainerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebContainerDelegate.swift; sourceTree = "<group>"; };
 		92B0ABCD227ECDE2002ED0FF /* WebContainer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WebContainer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B0ABD1227ECDE2002ED0FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9F1F6513B267EC2031D4DDFF /* Pods_WebContainer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WebContainer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,7 +150,7 @@
 				92B0ABD1227ECDE2002ED0FF /* Info.plist */,
 				92358039227ECE5700231810 /* WebContainer.swift */,
 				924D54502280194100E95F5D /* JsInjection.swift */,
-				924D5452228026EC00E95F5D /* WebContainerDelegate.swift */,
+				92320C9A2281447F00967376 /* JsRouting.swift */,
 			);
 			path = WebContainer;
 			sourceTree = "<group>";
@@ -364,8 +364,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				924D54512280194100E95F5D /* JsInjection.swift in Sources */,
-				924D5453228026EC00E95F5D /* WebContainerDelegate.swift in Sources */,
 				9235803A227ECE5700231810 /* WebContainer.swift in Sources */,
+				92320C9B2281447F00967376 /* JsRouting.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
