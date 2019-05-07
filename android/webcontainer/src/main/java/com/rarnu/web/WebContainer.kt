@@ -90,8 +90,8 @@ class WebContainer : RelativeLayout {
         wv.loadUrl(url)
     }
 
-    fun loadLocal(filename: String) {
-        val url = "file:///android_asset/$filename"
+    fun loadLocal(filename: String, path: String) {
+        val url = "file:///android_asset/$path/$filename"
         if (acceptCookies) {
             val c = CookieManager.getInstance()
             if (cookie != null) {
@@ -110,6 +110,8 @@ class WebContainer : RelativeLayout {
         }
     }
 
+    fun loadLocalResource(resourcePath: String) = JsLocalResources.load(context, resourcePath)
+
     inner class CMWebViewClient : WebViewClient() {
 
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -120,6 +122,12 @@ class WebContainer : RelativeLayout {
         }
 
         override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
+            // TODO: load local resource
+            Log.e("loadResource", "loadResource => ${request?.url}")
+
+
+
+
             return super.shouldInterceptRequest(view, request)
         }
 

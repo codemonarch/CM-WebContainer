@@ -80,9 +80,9 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         }
     }
 
-    public func loadLocal(_ file: String) {
-        let path = Bundle.main.path(forResource: file, ofType: "")!
-        let pathURL = URL(fileURLWithPath: path)
+    public func loadLocal(_ file: String, _ path: String) {
+        let p = Bundle.main.path(forResource: file, ofType: "", inDirectory: path)!
+        let pathURL = URL(fileURLWithPath: p)
         let bundleURL = URL(fileURLWithPath: Bundle.main.bundlePath)
         if (acceptCookies) {
             if (cookie == nil) {
@@ -107,6 +107,10 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
             let retData = resp as? [String: Any]
             callback(retData)
         }
+    }
+    
+    public func loadLocalResource(_ resourcePath: String) {
+        JsLocalResources.load(resourcePath)
     }
     
     public func viewForZooming(in scrollView: UIScrollView) -> UIView? {

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		7DED6C795B2756CEF7205CE9 /* Pods_Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F94202D0D0081F7AF9DF853 /* Pods_Sample.framework */; };
 		92320C9B2281447F00967376 /* JsRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92320C9A2281447F00967376 /* JsRouting.swift */; };
+		92320C9D2281E45800967376 /* Pages in Resources */ = {isa = PBXBuildFile; fileRef = 92320C9C2281E45800967376 /* Pages */; };
+		92320C9F2281E68D00967376 /* JsLocalResources.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92320C9E2281E68D00967376 /* JsLocalResources.swift */; };
 		9235803A227ECE5700231810 /* WebContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92358039227ECE5700231810 /* WebContainer.swift */; };
 		92358041227ED0B000231810 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92358040227ED0B000231810 /* WebKit.framework */; };
 		924D5439227FF2DB00E95F5D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924D5438227FF2DB00E95F5D /* AppDelegate.swift */; };
@@ -18,7 +20,6 @@
 		924D5443227FF2DB00E95F5D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 924D5441227FF2DB00E95F5D /* LaunchScreen.storyboard */; };
 		924D5449227FF33600E95F5D /* WebContainer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92B0ABCD227ECDE2002ED0FF /* WebContainer.framework */; };
 		924D544A227FF33600E95F5D /* WebContainer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92B0ABCD227ECDE2002ED0FF /* WebContainer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		924D544F227FF3D300E95F5D /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 924D544E227FF3D300E95F5D /* index.html */; };
 		924D54512280194100E95F5D /* JsInjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924D54502280194100E95F5D /* JsInjection.swift */; };
 		9C930D257837A5CC13911BC3 /* Pods_WebContainer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F1F6513B267EC2031D4DDFF /* Pods_WebContainer.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -51,6 +52,8 @@
 		33FEFAD36D66F3AF910E3410 /* Pods-WebContainer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebContainer.release.xcconfig"; path = "Pods/Target Support Files/Pods-WebContainer/Pods-WebContainer.release.xcconfig"; sourceTree = "<group>"; };
 		882314E2C621E2698C8B65E0 /* Pods-Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-Sample/Pods-Sample.release.xcconfig"; sourceTree = "<group>"; };
 		92320C9A2281447F00967376 /* JsRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsRouting.swift; sourceTree = "<group>"; };
+		92320C9C2281E45800967376 /* Pages */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Pages; sourceTree = "<group>"; };
+		92320C9E2281E68D00967376 /* JsLocalResources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsLocalResources.swift; sourceTree = "<group>"; };
 		92358039227ECE5700231810 /* WebContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebContainer.swift; sourceTree = "<group>"; };
 		92358040227ED0B000231810 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		924D5436227FF2DB00E95F5D /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,7 +63,6 @@
 		924D543F227FF2DB00E95F5D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		924D5442227FF2DB00E95F5D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		924D5444227FF2DB00E95F5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		924D544E227FF3D300E95F5D /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		924D54502280194100E95F5D /* JsInjection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsInjection.swift; sourceTree = "<group>"; };
 		92B0ABCD227ECDE2002ED0FF /* WebContainer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WebContainer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92B0ABD1227ECDE2002ED0FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -105,7 +107,7 @@
 		924D5437227FF2DB00E95F5D /* Sample */ = {
 			isa = PBXGroup;
 			children = (
-				924D5448227FF2F000E95F5D /* Pages */,
+				92320C9C2281E45800967376 /* Pages */,
 				924D5438227FF2DB00E95F5D /* AppDelegate.swift */,
 				924D543A227FF2DB00E95F5D /* ViewController.swift */,
 				924D543C227FF2DB00E95F5D /* Main.storyboard */,
@@ -114,14 +116,6 @@
 				924D5444227FF2DB00E95F5D /* Info.plist */,
 			);
 			path = Sample;
-			sourceTree = "<group>";
-		};
-		924D5448227FF2F000E95F5D /* Pages */ = {
-			isa = PBXGroup;
-			children = (
-				924D544E227FF3D300E95F5D /* index.html */,
-			);
-			path = Pages;
 			sourceTree = "<group>";
 		};
 		92B0ABC3227ECDE2002ED0FF = {
@@ -151,6 +145,7 @@
 				92358039227ECE5700231810 /* WebContainer.swift */,
 				924D54502280194100E95F5D /* JsInjection.swift */,
 				92320C9A2281447F00967376 /* JsRouting.swift */,
+				92320C9E2281E68D00967376 /* JsLocalResources.swift */,
 			);
 			path = WebContainer;
 			sourceTree = "<group>";
@@ -263,7 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				924D5443227FF2DB00E95F5D /* LaunchScreen.storyboard in Resources */,
-				924D544F227FF3D300E95F5D /* index.html in Resources */,
+				92320C9D2281E45800967376 /* Pages in Resources */,
 				924D5440227FF2DB00E95F5D /* Assets.xcassets in Resources */,
 				924D543E227FF2DB00E95F5D /* Main.storyboard in Resources */,
 			);
@@ -363,6 +358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92320C9F2281E68D00967376 /* JsLocalResources.swift in Sources */,
 				924D54512280194100E95F5D /* JsInjection.swift in Sources */,
 				9235803A227ECE5700231810 /* WebContainer.swift in Sources */,
 				92320C9B2281447F00967376 /* JsRouting.swift in Sources */,

@@ -12,8 +12,9 @@ class MainActivity : Activity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        wc.loadLocal("index.html")
+        wc.loadLocal("index.html", "Pages")
         btnCall.setOnClickListener(this)
+        wc.loadLocalResource("Pages")
 
         JsRouting.registerRouting("sample") {
             var ret: Map<String, Any>? = null
