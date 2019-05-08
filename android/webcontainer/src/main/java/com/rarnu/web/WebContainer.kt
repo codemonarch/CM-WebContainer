@@ -122,12 +122,12 @@ class WebContainer : RelativeLayout {
         }
 
         override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
-            // TODO: load local resource
-            Log.e("loadResource", "loadResource => ${request?.url}")
-
-
-
-
+            val filename = request?.url?.toString() ?: ""
+            val fn = if (filename.contains("/")) filename.substringAfterLast("/") else filename
+            val ret = JsLocalResources.find(wv.context, fn)
+            if (ret != null) {
+                return ret
+            }
             return super.shouldInterceptRequest(view, request)
         }
 

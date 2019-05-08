@@ -12,6 +12,75 @@ import JavaScriptCore
 import WebViewJavascriptBridge
 import sfunctional
 
+let filteredKey = "FilteredKey"
+
+class NetworkIntercept: URLProtocol, NSURLConnectionDataDelegate {
+    static var isRegisted = false
+    private var conn: NSURLConnection?
+    
+    private static let extList = ["txt", "js", "css", "zip", "mp3", "wav", "gif", "jpg", "html", "mp4", "3gp", "pdf", "png", "svg", "ttf"]
+    override class func canInit(with request: URLRequest) -> Bool {
+        var ext = request.url?.pathExtension
+        if (ext == nil) {
+            ext = ""
+        } else {
+            ext = ext?.lowercased()
+        }
+        let isSource = extList.contains(ext!)
+        return URLProtocol.property(forKey: filteredKey, in: request) == nil && isSource
+    }
+    
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        return request
+    }
+    override func startLoading() {
+        var filename = super.request.url!.absoluteString
+        if (filename.contains("/")) {
+            filename = filename.sub(start: filename.lastIndexOf(sub: "/") + 1)
+        }
+        print(filename)
+        let resPath = Bundle.main.path(forResource: filename, ofType: "", inDirectory: JsLocalResources.basePath)
+        if (resPath == nil) {
+            // 没有本地资源，从网络加载
+            let req = (self.request as NSURLRequest).mutableCopy() as! NSMutableURLRequest
+            req.allHTTPHeaderFields = self.request.allHTTPHeaderFields
+            URLProtocol.setProperty(true, forKey: filteredKey, in: req)
+            self.conn = NSURLConnection(request: req as URLRequest, delegate: self)
+            return
+        }
+        let dataPath = Bundle.main.path(forResource: filename, ofType: "", inDirectory: JsLocalResources.basePath)!
+        let data = NSData(contentsOfFile: dataPath)!
+        let mime = JsLocalResources.getMimeType(filename)
+        sendResponseWithData(data as Data, mime)
+    }
+    override func stopLoading() {
+        self.conn?.cancel()
+    }
+    
+    private func sendResponseWithData(_ data: Data, _ mimeType: String) {
+        var header = [String: String]()
+        header["Content-Type"] = mimeType + ";charset=UTF-8"
+        header["Content-Length"] = "\(data.count)"
+        let resp = HTTPURLResponse(url: self.request.url!, statusCode: 200, httpVersion: "1.1", headerFields: header)!
+        self.client?.urlProtocol(self, didReceive: resp, cacheStoragePolicy: URLCache.StoragePolicy.notAllowed)
+        self.client?.urlProtocol(self, didLoad: data)
+        self.client?.urlProtocolDidFinishLoading(self)
+    }
+    
+    func connection(_ connection: NSURLConnection, didReceive response: URLResponse) {
+        self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: URLCache.StoragePolicy.allowed)
+    }
+    func connection(_ connection: NSURLConnection, didReceive data: Data) {
+        self.client?.urlProtocol(self, didLoad: data)
+    }
+    func connectionDidFinishLoading(_ connection: NSURLConnection) {
+        self.client?.urlProtocolDidFinishLoading(self)
+    }
+    func connection(_ connection: NSURLConnection, didFailWithError error: Error) {
+        self.client?.urlProtocol(self, didFailWithError: error)
+    }
+}
+
 public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, WKUIDelegate {
 
     private var wv: WKWebView!
@@ -111,6 +180,18 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
     
     public func loadLocalResource(_ resourcePath: String) {
         JsLocalResources.load(resourcePath)
+        if (!NetworkIntercept.isRegisted) {
+            NetworkIntercept.isRegisted = true
+            URLProtocol.registerClass(NetworkIntercept.classForCoder())
+            let cls = NSClassFromString("WKBrowsingContextController")
+            let sel = NSSelectorFromString("registerSchemeForCustomProtocol:")
+            if (cls != nil) {
+                if (cls!.responds(to: sel)) {
+                    cls?.performSelector(inBackground: sel, with: "http")
+                    cls?.performSelector(inBackground: sel, with: "https")
+                }
+            }
+        }
     }
     
     public func viewForZooming(in scrollView: UIScrollView) -> UIView? {

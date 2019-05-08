@@ -24,8 +24,9 @@ class ViewController: UIViewController {
         btn.addTarget(self, action: #selector(btnClicked(_:)), for: UIControl.Event.touchDown)
         btn.frame = CGRect(x: 0, y: 300, width: 100, height: 30)
         self.view.addSubview(btn)
-        wc.loadLocal("index.html", "Pages")
+        
         wc.loadLocalResource("Pages")
+        wc.loadLocal("index.html", "Pages")
         
         JsRouting.registerRouting("sample") { p in
             var ret: [String: Any]? = nil

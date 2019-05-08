@@ -22,7 +22,7 @@ class JsLocalResources: NSObject {
         }
     }
     
-    private class func getMimeType(_ resource: String) -> String {
+    class func getMimeType(_ resource: String) -> String {
         var ret = "text/plain"
         let ext = resource.sub(start: resource.lastIndexOf(sub: ".") + 1)
         switch ext {
