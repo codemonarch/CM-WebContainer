@@ -13,6 +13,7 @@ import WebViewJavascriptBridge
 import sfunctional
 
 let filteredKey = "FilteredKey"
+var pool: WKProcessPool? = nil
 
 class NetworkIntercept: URLProtocol, NSURLConnectionDataDelegate {
     static var isRegisted = false
@@ -85,6 +86,7 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
 
     private var wv: WKWebView!
     private var bridge: WebViewJavascriptBridge!
+    
     private var cookie: [String: Any]? = nil
     
     private var btnBack: UIButton!
@@ -101,6 +103,9 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         cfg.preferences = pref
         cfg.selectionGranularity = WKSelectionGranularity.character
         cfg.userContentController = WKUserContentController()
+        cfg.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+        cfg.preferences.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
+        cfg.processPool = singleSharePool()
         JsInjection.injectJs(cfg: cfg)
         
         wv = WKWebView(frame: frame, configuration: cfg)
@@ -258,4 +263,20 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         }
         return HTTPCookie(properties: c)!
     }
+    
+    private func singleSharePool() -> WKProcessPool {
+        if (pool == nil) {
+            pool = WKProcessPool()
+        }
+        return pool!
+    }
+    
+    /*
+     + (WKProcessPool *)singleWkProcessPool{
+     AFDISPATCH_ONCE_BLOCK(^{
+     sharedPool = [[WKProcessPool alloc] init];
+     })
+     return sharedPool;
+     }
+    */
 }

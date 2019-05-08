@@ -13,12 +13,10 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import com.rarnu.kt.android.alert
 import org.json.JSONObject
-import android.webkit.ValueCallback
 
 class WebContainer : RelativeLayout {
 
     private lateinit var wv: WebView
-
     private var uploadMessage: ValueCallback<Array<Uri>>? = null
     private var cookie: Map<String, Any>? = null
 
@@ -26,10 +24,7 @@ class WebContainer : RelativeLayout {
     private lateinit var bntShare: ImageButton
 
     constructor(context: Context) : this(context, null)
-
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        initSettings()
-    }
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) { initSettings() }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initSettings() {
@@ -39,18 +34,22 @@ class WebContainer : RelativeLayout {
         addView(wv)
 
         with(wv.settings) {
+            // local storage
+            domStorageEnabled = true
+            val appCachePath = context.cacheDir.absolutePath
+            setAppCachePath(appCachePath)
+            allowFileAccess = true
+            setAppCacheEnabled(true)
+
             builtInZoomControls = false
             displayZoomControls = false
-            allowFileAccess = true
             allowContentAccess = true
             allowFileAccessFromFileURLs = true
             allowUniversalAccessFromFileURLs = true
             useWideViewPort = true
             loadsImagesAutomatically = true
             javaScriptEnabled = true
-            setAppCacheEnabled(true)
             databaseEnabled = true
-            domStorageEnabled = true
             javaScriptCanOpenWindowsAutomatically = false
             defaultTextEncodingName = "UTF-8"
             mixedContentMode = MIXED_CONTENT_ALWAYS_ALLOW
