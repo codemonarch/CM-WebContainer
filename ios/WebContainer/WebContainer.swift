@@ -86,8 +86,8 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
 
     private var wv: WKWebView!
     private var bridge: WebViewJavascriptBridge!
-    
     private var cookie: [String: Any]? = nil
+    private var meta: [String: String]? = nil
     
     private var btnBack: UIButton!
     private var btnShare: UIButton!
@@ -104,7 +104,7 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         cfg.selectionGranularity = WKSelectionGranularity.character
         cfg.userContentController = WKUserContentController()
         cfg.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
-        cfg.preferences.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
+        // cfg.preferences.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         cfg.processPool = singleSharePool()
         JsInjection.injectJs(cfg: cfg)
         
@@ -208,6 +208,7 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
     }
     
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        // cookie
         if (acceptCookies) {
             let c = HTTPCookieStorage.shared.cookies
             if (c != nil) {
@@ -219,6 +220,23 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
                 }
             }
         }
+        // meta
+        bridge.callHandler("getMeta", data: nil) { resp in
+            if (resp != nil) {
+                let arr = resp as! [[String: String]]
+                self.meta = [String: String]()
+                arr.forEach { d in
+                    let name = d["name"]!
+                    let value = d["content"]!
+                    self.meta![name] = value
+                }
+                self.parseMeta()
+            }
+        }
+    }
+    
+    private func parseMeta() {
+        // TODO: parse meta
     }
     
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {

@@ -12,6 +12,7 @@ import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import com.rarnu.kt.android.alert
+import org.json.JSONArray
 import org.json.JSONObject
 
 class WebContainer : RelativeLayout {
@@ -19,6 +20,7 @@ class WebContainer : RelativeLayout {
     private lateinit var wv: WebView
     private var uploadMessage: ValueCallback<Array<Uri>>? = null
     private var cookie: Map<String, Any>? = null
+    private var meta: MutableMap<String, String>? = null
 
     private lateinit var btnBack: ImageButton
     private lateinit var bntShare: ImageButton
@@ -111,6 +113,10 @@ class WebContainer : RelativeLayout {
 
     fun loadLocalResource(resourcePath: String) = JsLocalResources.load(context, resourcePath)
 
+    private fun parseMeta() {
+        // TODO: parse meta
+    }
+
     inner class CMWebViewClient : WebViewClient() {
 
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -133,9 +139,27 @@ class WebContainer : RelativeLayout {
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             JsInjection.inject(wv)
+            // cookie
             if (acceptCookies) {
                 val cookieString = CookieManager.getInstance().getCookie(url)
                 cookie = cookieString?.toCookie()
+            }
+            // meta
+            wv.evaluateJavascript("javascript:getMeta();") {
+                val sBack = it?.replace("\\\"", "\"")?.trim('\"')
+                try {
+                    val jarr = JSONArray(sBack)
+                    meta = mutableMapOf()
+                    for (i in 0 until jarr.length()) {
+                        val jo = jarr.getJSONObject(i)
+                        val name = jo.getString("name")
+                        val value = jo.getString("content")
+                        meta!![name] = value
+                    }
+                    parseMeta()
+                } catch (th: Throwable) {
+
+                }
             }
         }
 

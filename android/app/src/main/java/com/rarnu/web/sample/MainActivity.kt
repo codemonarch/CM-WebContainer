@@ -12,7 +12,6 @@ class MainActivity : Activity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        wc.loadLocal("index.html", "Pages")
         btnCall.setOnClickListener(this)
         wc.loadLocalResource("Pages")
 
@@ -25,6 +24,8 @@ class MainActivity : Activity(), View.OnClickListener {
             }
             ret
         }
+
+        wc.loadLocal("index.html", "Pages")
     }
 
     override fun onClick(v: View?) {

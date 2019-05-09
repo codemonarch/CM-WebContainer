@@ -19,7 +19,6 @@ object JsLocalResources {
     fun find(ctx: Context, resource: String): WebResourceResponse? {
         var ret: WebResourceResponse? = null
         if (listResource.contains(resource)) {
-            val am = ctx.assets
             val ins = ctx.assets.open("$basePath/$resource")
             ret = WebResourceResponse(getMimeType(resource), "UTF-8", ins)
         }
