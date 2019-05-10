@@ -175,11 +175,7 @@ class WebContainer : RelativeLayout {
 
     inner class CMChromeClient : WebChromeClient() {
 
-        override fun onShowFileChooser(
-            webView: WebView?,
-            filePathCallback: ValueCallback<Array<Uri>>?,
-            fileChooserParams: FileChooserParams?
-        ): Boolean {
+        override fun onShowFileChooser(webView: WebView?, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
             var received = false
             PickDialog(context) { w ->
                 when (w) {
