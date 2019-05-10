@@ -179,10 +179,18 @@ class WebContainer : RelativeLayout {
             var received = false
             PickDialog(context) { w ->
                 when (w) {
-                    PickDialog.RESULT_PHOTO -> { received = true; FilePicker.chooseImage(context) { p -> filePathCallback?.onReceiveValue(if (p == null) null else arrayOf(p)) } }
-                    PickDialog.RESULT_FILE -> { received = true; FilePicker.chooseFile(context) { f -> filePathCallback?.onReceiveValue(if (f == null) null else arrayOf(f)) } }
-                    PickDialog.RESULT_CANCEL -> { received = true; filePathCallback?.onReceiveValue(null) }
-                    PickDialog.RESULT_DISMISS -> if (!received) { filePathCallback?.onReceiveValue(null) }
+                    PickDialog.RESULT_PHOTO -> {
+                        received = true; FilePicker.chooseImage(context) { p -> filePathCallback?.onReceiveValue(if (p == null) null else arrayOf(p)) }
+                    }
+                    PickDialog.RESULT_FILE -> {
+                        received = true; FilePicker.chooseFile(context) { f -> filePathCallback?.onReceiveValue(if (f == null) null else arrayOf(f)) }
+                    }
+                    PickDialog.RESULT_CANCEL -> {
+                        received = true; filePathCallback?.onReceiveValue(null)
+                    }
+                    PickDialog.RESULT_DISMISS -> if (!received) {
+                        filePathCallback?.onReceiveValue(null)
+                    }
                 }
             }.show()
             return true
