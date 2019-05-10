@@ -1,6 +1,7 @@
 package com.rarnu.web
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
@@ -9,24 +10,24 @@ import android.util.Log
 import android.view.ViewGroup
 import android.webkit.*
 import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-import android.widget.ImageButton
 import android.widget.RelativeLayout
 import com.rarnu.kt.android.alert
+import com.rarnu.web.picker.FilePicker
+import com.rarnu.web.picker.PickDialog
 import org.json.JSONArray
 import org.json.JSONObject
 
 class WebContainer : RelativeLayout {
 
     private lateinit var wv: WebView
-    private var uploadMessage: ValueCallback<Array<Uri>>? = null
     private var cookie: Map<String, Any>? = null
     private var meta: MutableMap<String, String>? = null
-
-    private lateinit var btnBack: ImageButton
-    private lateinit var bntShare: ImageButton
+    var delegate: WebDelegate? = null
 
     constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) { initSettings() }
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        initSettings()
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initSettings() {
@@ -113,9 +114,7 @@ class WebContainer : RelativeLayout {
 
     fun loadLocalResource(resourcePath: String) = JsLocalResources.load(context, resourcePath)
 
-    private fun parseMeta() {
-        // TODO: parse meta
-    }
+    private fun parseMeta() = delegate?.onMeta(this, meta)
 
     inner class CMWebViewClient : WebViewClient() {
 
@@ -161,10 +160,12 @@ class WebContainer : RelativeLayout {
 
                 }
             }
+            delegate?.onEndLoad(this@WebContainer)
         }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
+            delegate?.onStartLoad(this@WebContainer)
         }
 
         override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
@@ -179,9 +180,15 @@ class WebContainer : RelativeLayout {
             filePathCallback: ValueCallback<Array<Uri>>?,
             fileChooserParams: FileChooserParams?
         ): Boolean {
-            // TODO: select upload file
-            uploadMessage = filePathCallback
-
+            var received = false
+            PickDialog(context) { w ->
+                when (w) {
+                    PickDialog.RESULT_PHOTO -> { received = true; FilePicker.chooseImage(context) { p -> filePathCallback?.onReceiveValue(if (p == null) null else arrayOf(p)) } }
+                    PickDialog.RESULT_FILE -> { received = true; FilePicker.chooseFile(context) { f -> filePathCallback?.onReceiveValue(if (f == null) null else arrayOf(f)) } }
+                    PickDialog.RESULT_CANCEL -> { received = true; filePathCallback?.onReceiveValue(null) }
+                    PickDialog.RESULT_DISMISS -> if (!received) { filePathCallback?.onReceiveValue(null) }
+                }
+            }.show()
             return true
         }
 
@@ -273,5 +280,6 @@ private fun String.toJsonEncoded() = this.replace("\\", "\\\\").replace("\n", "\
 private fun Map<String, Any>.toCookieString() = map { "${it.key}=${it.value}" }.joinToString(";")
 private fun String.toCookie() = split(";").map { it.trim() }.map {
     val kv = it.split("=")
-    Pair<String, Any>(kv[0].trim(), kv[1].trim()) }.toMap()
+    Pair<String, Any>(kv[0].trim(), kv[1].trim())
+}.toMap()
 

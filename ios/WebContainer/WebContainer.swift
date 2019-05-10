@@ -88,9 +88,7 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
     private var bridge: WebViewJavascriptBridge!
     private var cookie: [String: Any]? = nil
     private var meta: [String: String]? = nil
-    
-    private var btnBack: UIButton!
-    private var btnShare: UIButton!
+    public var delegate: WebDelegate? = nil
     
     var acceptCookies = true
 
@@ -104,7 +102,6 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         cfg.selectionGranularity = WKSelectionGranularity.character
         cfg.userContentController = WKUserContentController()
         cfg.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
-        // cfg.preferences.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         cfg.processPool = singleSharePool()
         JsInjection.injectJs(cfg: cfg)
         
@@ -204,7 +201,7 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
     }
     
     public func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        print("webViewDidStartLoad")
+        delegate?.onStartLoad?(self)
     }
     
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -233,10 +230,11 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
                 self.parseMeta()
             }
         }
+        delegate?.onEndLoad?(self)
     }
     
     private func parseMeta() {
-        // TODO: parse meta
+        delegate?.onMeta?(self, meta)
     }
     
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {

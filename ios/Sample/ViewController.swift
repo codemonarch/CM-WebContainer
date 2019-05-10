@@ -9,7 +9,7 @@
 import UIKit
 import WebContainer
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, WebDelegate {
 
     private var wc: WebContainer!
     private var btn: UIButton!
@@ -26,7 +26,9 @@ class ViewController: UIViewController {
         self.view.addSubview(btn)
         
         wc.loadLocalResource("Pages")
+        
         wc.loadLocal("index.html", "Pages")
+        wc.delegate = self
         
         JsRouting.registerRouting("sample") { p in
             var ret: [String: Any]? = nil
@@ -56,6 +58,12 @@ class ViewController: UIViewController {
             ret = ["a": a * 2, "b": b * 3]
         }
         return ret
+    }
+    
+    func onMeta(_ wv: WebContainer, _ meta: [String : String]?) {
+        if (meta != nil) {
+           print("meta => \(meta!)")
+        }
     }
 
 }
