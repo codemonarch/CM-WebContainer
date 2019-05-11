@@ -8,8 +8,9 @@
 
 import UIKit
 import WebContainer
+import sfunctional
 
-class ViewController: UIViewController, WebDelegate {
+class ViewController: UIViewController, WebDelegate, WebContainerViewControllerDelegate {
 
     private var wc: WebContainer!
     private var btn: UIButton!
@@ -24,12 +25,8 @@ class ViewController: UIViewController, WebDelegate {
         btn.addTarget(self, action: #selector(btnClicked(_:)), for: UIControl.Event.touchDown)
         btn.frame = CGRect(x: 0, y: 300, width: 100, height: 30)
         self.view.addSubview(btn)
-        
-        wc.loadLocalResource("Pages")
-        
-        wc.loadLocal("index.html", "Pages")
         wc.delegate = self
-        
+        wc.loadLocalResource("Pages")
         JsRouting.registerRouting("sample") { p in
             var ret: [String: Any]? = nil
             if (p != nil) {
@@ -40,14 +37,30 @@ class ViewController: UIViewController, WebDelegate {
             return ret
         }
         
+        wc.loadLocal("index.html", "Pages")
+        
     }
     
     @objc func btnClicked(_ sender: Any) {
+        /*
         wc.callJs("sample", ["p1":"666", "p2":"777"]) { resp in
             if (resp != nil) {
                 print("callvack from js: ", resp!)
             }
         }
+        wc.runJs("document.getElementById('btn').style.backgroundColor = 'yellow';") { data in }
+        */
+        let vc = WebContainerViewController()
+        vc.loadUrl = "index.html"
+        vc.localPath = "Pages"
+        vc.isLocal = true
+        vc.metaTitle = "CMW"
+        vc.metaShowTitle = true
+        vc.acceptPageMeta = true
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
+        
+        
     }
     
     func onJsCall(_ routing: String, _ param: [String : Any]?) -> [String : Any]? {
@@ -64,6 +77,10 @@ class ViewController: UIViewController, WebDelegate {
         if (meta != nil) {
            print("meta => \(meta!)")
         }
+    }
+    
+    func onSecondaryButtonClicked(_ wv: WebContainerViewController) {
+        print("Secondary button clicked")
     }
 
 }

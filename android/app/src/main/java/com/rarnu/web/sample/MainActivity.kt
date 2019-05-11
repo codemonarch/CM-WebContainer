@@ -37,6 +37,7 @@ class MainActivity : Activity(), View.OnClickListener, WebDelegate {
         wc.callJs("sample", mapOf("p1" to 666, "p2" to 777)) {
             Log.e("Callback", "from js => $it")
         }
+        wc.runJs("document.getElementById('btn').style.backgroundColor = 'yellow';") { }
     }
 
     override fun onStartLoad(wv: WebContainer) {

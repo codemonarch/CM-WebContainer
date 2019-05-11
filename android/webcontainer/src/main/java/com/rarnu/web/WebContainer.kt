@@ -1,7 +1,6 @@
 package com.rarnu.web
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
@@ -112,7 +111,19 @@ class WebContainer : RelativeLayout {
         }
     }
 
+    fun runJs(js: String, callback: (String?) -> Unit) {
+        wv.evaluateJavascript("javascript:$js") {
+            callback(it)
+        }
+    }
+
     fun loadLocalResource(resourcePath: String) = JsLocalResources.load(context, resourcePath)
+
+    fun getCookie() = cookie
+
+    fun setCookie(c: Map<String, Any>?) {
+        cookie = c
+    }
 
     private fun parseMeta() = delegate?.onMeta(this, meta)
 

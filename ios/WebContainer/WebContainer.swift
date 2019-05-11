@@ -180,6 +180,12 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         }
     }
     
+    public func runJs(_ js: String, callback: @escaping (String?) -> Void) {
+        wv.evaluateJavaScript(js) { (data, _) in
+            callback(data as? String)
+        }
+    }
+    
     public func loadLocalResource(_ resourcePath: String) {
         JsLocalResources.load(resourcePath)
         if (!NetworkIntercept.isRegisted) {
