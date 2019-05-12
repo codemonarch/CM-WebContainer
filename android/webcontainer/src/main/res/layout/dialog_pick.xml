@@ -3,7 +3,37 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
+              android:background="@android:color/black"
               android:padding="8dip">
+
+    <RelativeLayout
+            android:id="@+id/layCamera"
+            android:layout_width="match_parent"
+            android:layout_height="40dip"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/selector_lay_photo">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Take Photo"
+                android:gravity="left|center"
+                android:layout_marginLeft="8dip"
+        />
+
+        <ImageView
+                android:layout_width="32dip"
+                android:layout_height="32dip"
+                android:src="@android:drawable/ic_menu_camera"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dip"
+        />
+    </RelativeLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@android:color/darker_gray"/>
 
     <RelativeLayout
             android:id="@+id/layPhoto"
@@ -11,7 +41,7 @@
             android:layout_height="40dip"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/selector_lay_photo">
+            android:background="@android:color/white">
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

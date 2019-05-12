@@ -190,6 +190,9 @@ class WebContainer : RelativeLayout {
             var received = false
             PickDialog(context) { w ->
                 when (w) {
+                    PickDialog.RESULT_CAMERA -> {
+                        received = true; FilePicker.chooseCamera(context) { p -> filePathCallback?.onReceiveValue(if (p == null) null else arrayOf(p)) }
+                    }
                     PickDialog.RESULT_PHOTO -> {
                         received = true; FilePicker.chooseImage(context) { p -> filePathCallback?.onReceiveValue(if (p == null) null else arrayOf(p)) }
                     }

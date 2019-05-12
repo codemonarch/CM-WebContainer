@@ -1,7 +1,9 @@
 package com.rarnu.web.sample
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,6 +20,14 @@ class MainActivity : Activity(), View.OnClickListener, WebDelegate {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+            || checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest
+                .permission.CAMERA), 0)
+        }
+
+
         btnCall.setOnClickListener(this)
         wc.loadLocalResource("Pages")
         JsRouting.registerRouting("sample") {

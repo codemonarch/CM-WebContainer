@@ -10,10 +10,11 @@ import kotlinx.android.synthetic.main.dialog_pick.*
 class PickDialog(context: Context, val callback: (which: Int) -> Unit) : Dialog(context, R.style.pickDialog) {
 
     companion object {
-        const val RESULT_PHOTO = 0
-        const val RESULT_FILE = 1
-        const val RESULT_CANCEL = 2
-        const val RESULT_DISMISS = 3
+        const val RESULT_CAMERA = 0
+        const val RESULT_PHOTO = 1
+        const val RESULT_FILE = 2
+        const val RESULT_CANCEL = 3
+        const val RESULT_DISMISS = 4
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +25,7 @@ class PickDialog(context: Context, val callback: (which: Int) -> Unit) : Dialog(
         lp?.width = context.resources.displayMetrics.widthPixels
         window?.attributes = lp
         setOnDismissListener { callback(RESULT_DISMISS) }
+        layCamera.setOnClickListener { dismiss(); callback(RESULT_CAMERA) }
         layPhoto.setOnClickListener { dismiss(); callback(RESULT_PHOTO) }
         layFile.setOnClickListener { dismiss(); callback(RESULT_FILE) }
         layCancel.setOnClickListener { dismiss(); callback(RESULT_CANCEL) }
