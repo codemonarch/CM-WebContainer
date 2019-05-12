@@ -6,5 +6,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
             android:usesCleartextTraffic="true">
+        <activity android:name=".WebContainerActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@android:style/Theme.Material.Light">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.VIEW"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

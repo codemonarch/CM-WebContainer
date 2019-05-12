@@ -47,9 +47,14 @@ class ViewController: UIViewController, WebDelegate, WebContainerViewControllerD
             if (resp != nil) {
                 print("callvack from js: ", resp!)
             }
-        }
+        }*/
+        /*
         wc.runJs("document.getElementById('btn').style.backgroundColor = 'yellow';") { data in }
         */
+        /*
+        wc.setElementStyle("btn", ["backgroundColor": "yellow"])
+        */
+        
         let vc = WebContainerViewController()
         vc.loadUrl = "index.html"
         vc.localPath = "Pages"
@@ -59,8 +64,6 @@ class ViewController: UIViewController, WebDelegate, WebContainerViewControllerD
         vc.acceptPageMeta = true
         vc.delegate = self
         self.navigationController?.pushViewController(vc, animated: true)
-        
-        
     }
     
     func onJsCall(_ routing: String, _ param: [String : Any]?) -> [String : Any]? {
@@ -71,12 +74,6 @@ class ViewController: UIViewController, WebDelegate, WebContainerViewControllerD
             ret = ["a": a * 2, "b": b * 3]
         }
         return ret
-    }
-    
-    func onMeta(_ wv: WebContainer, _ meta: [String : String]?) {
-        if (meta != nil) {
-           print("meta => \(meta!)")
-        }
     }
     
     func onSecondaryButtonClicked(_ wv: WebContainerViewController) {

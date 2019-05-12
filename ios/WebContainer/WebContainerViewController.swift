@@ -16,7 +16,6 @@ public class WebContainerViewController: UIViewController, WebDelegate {
     public var metaBackgroundColor = "#FFFFFF"
     public var metaShowTitle = true
     public var metaTitle = ""
-    public var metaTitleTextColor = "#000000"
     public var metaShowSecondary = false
     public var metaSecondaryTitle = "..."
     public var metaWhiteStatus = false
@@ -54,7 +53,6 @@ public class WebContainerViewController: UIViewController, WebDelegate {
         } else {
             wc.load(loadUrl)
         }
-        
         if (!acceptPageMeta) {
             // 由 ViewController 控制
             if (metaShowTitle) {
@@ -68,7 +66,6 @@ public class WebContainerViewController: UIViewController, WebDelegate {
                 }
             }
         }
-        
     }
     
     private func generateBackBtn() {
@@ -133,8 +130,8 @@ public class WebContainerViewController: UIViewController, WebDelegate {
         }
         // 导航全局控制
         self.navigationController?.navigationBar.barTintColor = UIColor.parseString(metaBackgroundColor)
-        self.navigationController?.navigationBar.tintColor = UIColor.parseString(metaTitleTextColor)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.parseString(metaTitleTextColor)]
+        self.navigationController?.navigationBar.tintColor = metaWhiteStatus ? UIColor.white : UIColor.black
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: metaWhiteStatus ? UIColor.white : UIColor.black]
         self.navigationController?.navigationBar.barStyle = metaWhiteStatus ? UIBarStyle.black : UIBarStyle.default
         self.navigationController?.setNavigationBarHidden(!metaShowTitle, animated: true)
         
@@ -166,16 +163,12 @@ public class WebContainerViewController: UIViewController, WebDelegate {
                     metaBackgroundColor = mbc!
                     self.navigationController?.navigationBar.barTintColor = UIColor.parseString(metaBackgroundColor)
                 }
-                let mttc = meta!["title-text-color"]
-                if (mttc != nil) {
-                    metaTitleTextColor = mttc!
-                    self.navigationController?.navigationBar.tintColor = UIColor.parseString(metaTitleTextColor)
-                    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.parseString(metaTitleTextColor)]
-                }
                 let mws = meta!["white-status"]
                 if (mws != nil) {
                     metaWhiteStatus = mws! == "true"
                     self.navigationController?.navigationBar.barStyle = metaWhiteStatus ? UIBarStyle.black : UIBarStyle.default
+                    self.navigationController?.navigationBar.tintColor = metaWhiteStatus ? UIColor.white : UIColor.black
+                    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: metaWhiteStatus ? UIColor.white : UIColor.black]
                 }
                 let mst = meta!["show-title"]
                 let mss = meta!["show-secondary"]

@@ -1,19 +1,19 @@
 package com.rarnu.web.sample
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.rarnu.web.JsRouting
 import com.rarnu.web.WebContainer
+import com.rarnu.web.WebContainerActivity
 import com.rarnu.web.WebDelegate
 import com.rarnu.web.picker.FilePicker
 import kotlinx.android.synthetic.main.activity_main.*
 import java.nio.channels.FileChannel
 
-
 class MainActivity : Activity(), View.OnClickListener, WebDelegate {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,16 +31,22 @@ class MainActivity : Activity(), View.OnClickListener, WebDelegate {
         }
         wc.delegate = this
         wc.loadLocal("index.html", "Pages")
+
     }
 
     override fun onClick(v: View?) {
+        /*
         wc.callJs("sample", mapOf("p1" to 666, "p2" to 777)) {
             Log.e("Callback", "from js => $it")
         }
         wc.runJs("document.getElementById('btn').style.backgroundColor = 'yellow';") { }
+
+         */
+        startActivity(Intent(this, WebContainerActivity::class.java))
     }
 
     override fun onStartLoad(wv: WebContainer) {
+
     }
 
     override fun onEndLoad(wv: WebContainer) {

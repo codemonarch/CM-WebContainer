@@ -39,7 +39,6 @@ class NetworkIntercept: URLProtocol, NSURLConnectionDataDelegate {
         if (filename.contains("/")) {
             filename = filename.sub(start: filename.lastIndexOf(sub: "/") + 1)
         }
-        print(filename)
         let resPath = Bundle.main.path(forResource: filename, ofType: "", inDirectory: JsLocalResources.basePath)
         if (resPath == nil) {
             // 没有本地资源，从网络加载
@@ -186,6 +185,12 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         }
     }
     
+    public func setElementStyle(_ id: String, _ styles: [String: String]) {
+        var js = ""
+        styles.forEach { k, v in js += "document.getElementById('\(id)').style.\(k) = '\(v)';" }
+        runJs(js) { data in }
+    }
+    
     public func loadLocalResource(_ resourcePath: String) {
         JsLocalResources.load(resourcePath)
         if (!NetworkIntercept.isRegisted) {
@@ -292,13 +297,4 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
         }
         return pool!
     }
-    
-    /*
-     + (WKProcessPool *)singleWkProcessPool{
-     AFDISPATCH_ONCE_BLOCK(^{
-     sharedPool = [[WKProcessPool alloc] init];
-     })
-     return sharedPool;
-     }
-    */
 }
