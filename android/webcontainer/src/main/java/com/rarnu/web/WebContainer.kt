@@ -288,7 +288,6 @@ private fun String.toMap(): Map<String, Any>? {
             }
         }
     } catch (e: Exception) {
-        Log.e("String.toMap()", "Error: $e")
     }
     return m
 }

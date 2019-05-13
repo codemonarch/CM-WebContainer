@@ -7,15 +7,13 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.rarnu.web.JsRouting
-import com.rarnu.web.WebContainer
-import com.rarnu.web.WebContainerActivity
-import com.rarnu.web.WebDelegate
+import com.rarnu.web.*
 import com.rarnu.web.picker.FilePicker
 import kotlinx.android.synthetic.main.activity_main.*
 import java.nio.channels.FileChannel
 
-class MainActivity : Activity(), View.OnClickListener, WebDelegate {
+class MainActivity : Activity(), View.OnClickListener, WebDelegate, WebContainerActivityDelegate {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +50,13 @@ class MainActivity : Activity(), View.OnClickListener, WebDelegate {
         wc.runJs("document.getElementById('btn').style.backgroundColor = 'yellow';") { }
 
          */
+        WebContainerActivity.loadUrl = "index.html"
+        WebContainerActivity.localPath = "Pages"
+        WebContainerActivity.isLocal = true
+        WebContainerActivity.metaTitle = "CMW"
+        WebContainerActivity.metaShowTitle = true
+        WebContainerActivity.acceptPageMeta = true
+        WebContainerActivity.delegate = this
         startActivity(Intent(this, WebContainerActivity::class.java))
     }
 
@@ -64,6 +69,10 @@ class MainActivity : Activity(), View.OnClickListener, WebDelegate {
 
     override fun onMeta(wv: WebContainer, meta: Map<String, String>?) {
         Log.e("onMeta", "meta => $meta")
+    }
+
+    override fun onSecondaryButtonClicked(wv: WebContainerActivity) {
+        Log.e("onSecondaryButtonClicked", "onSecondaryButtonClicked => clicked")
     }
 
 }

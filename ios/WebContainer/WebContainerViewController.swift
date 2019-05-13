@@ -34,9 +34,9 @@ public class WebContainerViewController: UIViewController, WebDelegate {
     
     private var isNavHidden: Bool? = false
     
-    private var btnBack: UIButton!
-    private var btnSecondary: UIButton!
-    private var barItemSecondary: UIBarButtonItem!
+    private var btnBack: UIButton?
+    private var btnSecondary: UIButton?
+    private var barItemSecondary: UIBarButtonItem?
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -69,35 +69,41 @@ public class WebContainerViewController: UIViewController, WebDelegate {
     }
     
     private func generateBackBtn() {
-        btnBack = UIButton(type: UIButton.ButtonType.custom)
-        btnBack.setTitle("<", for: UIControl.State.normal)
-        let statusHeight = statusbarSize().height
-        btnBack.frame = CGRect(x: 8, y: statusHeight + 8, width: 40, height: 40)
-        btnBack.backgroundColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
-        btnBack.layer.cornerRadius = 20
-        btnBack.clipsToBounds = true
-        btnBack.isUserInteractionEnabled = true
-        btnBack.addTarget(self, action: #selector(btnBackClicked(_:)), for: UIControl.Event.touchUpInside)
-        self.view.addSubview(btnBack)
+        if (btnBack == nil) {
+            btnBack = UIButton(type: UIButton.ButtonType.custom)
+            btnBack!.setTitle("<", for: UIControl.State.normal)
+            let statusHeight = statusbarSize().height
+            btnBack!.frame = CGRect(x: 8, y: statusHeight + 8, width: 40, height: 40)
+            btnBack!.backgroundColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+            btnBack!.layer.cornerRadius = 20
+            btnBack!.clipsToBounds = true
+            btnBack!.isUserInteractionEnabled = true
+            btnBack!.addTarget(self, action: #selector(btnBackClicked(_:)), for: UIControl.Event.touchUpInside)
+            self.view.addSubview(btnBack!)
+        }
     }
     
     private func generateSecondaryBarItem() {
-        barItemSecondary = UIBarButtonItem(title: metaSecondaryTitle, style: UIBarButtonItem.Style.plain, target: self, action: #selector(btnSecondaryClicked(_:)))
-        self.navigationItem.rightBarButtonItem = barItemSecondary
+        if (barItemSecondary == nil) {
+            barItemSecondary = UIBarButtonItem(title: metaSecondaryTitle, style: UIBarButtonItem.Style.plain, target: self, action: #selector(btnSecondaryClicked(_:)))
+            self.navigationItem.rightBarButtonItem = barItemSecondary!
+        }
     }
     
     private func generateSecondaryBtn() {
-        btnSecondary = UIButton(type: UIButton.ButtonType.custom)
-        btnSecondary.setTitle(metaSecondaryTitle, for: UIControl.State.normal)
-        let statusHeight = statusbarSize().height
-        let size = UIScreen.main.bounds.size
-        btnSecondary.frame = CGRect(x: size.width - 48 , y: statusHeight + 8, width: 40, height: 40)
-        btnSecondary.backgroundColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
-        btnSecondary.layer.cornerRadius = 20
-        btnSecondary.clipsToBounds = true
-        btnSecondary.isUserInteractionEnabled = true
-        btnSecondary.addTarget(self, action: #selector(btnSecondaryClicked(_:)), for: UIControl.Event.touchUpInside)
-        self.view.addSubview(btnSecondary)
+        if (btnSecondary == nil) {
+            btnSecondary = UIButton(type: UIButton.ButtonType.custom)
+            btnSecondary!.setTitle(metaSecondaryTitle, for: UIControl.State.normal)
+            let statusHeight = statusbarSize().height
+            let size = UIScreen.main.bounds.size
+            btnSecondary!.frame = CGRect(x: size.width - 48 , y: statusHeight + 8, width: 40, height: 40)
+            btnSecondary!.backgroundColor = UIColor(displayP3Red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+            btnSecondary!.layer.cornerRadius = 20
+            btnSecondary!.clipsToBounds = true
+            btnSecondary!.isUserInteractionEnabled = true
+            btnSecondary!.addTarget(self, action: #selector(btnSecondaryClicked(_:)), for: UIControl.Event.touchUpInside)
+            self.view.addSubview(btnSecondary!)
+        }
     }
     
     
@@ -156,21 +162,19 @@ public class WebContainerViewController: UIViewController, WebDelegate {
                 let mt = meta!["title"]
                 if (mt != nil) {
                     metaTitle = mt!
-                    self.title = metaTitle
                 }
                 let mbc = meta!["background-color"]
                 if (mbc != nil) {
                     metaBackgroundColor = mbc!
-                    self.navigationController?.navigationBar.barTintColor = UIColor.parseString(metaBackgroundColor)
                 }
                 let mws = meta!["white-status"]
                 if (mws != nil) {
                     metaWhiteStatus = mws! == "true"
-                    self.navigationController?.navigationBar.barStyle = metaWhiteStatus ? UIBarStyle.black : UIBarStyle.default
-                    self.navigationController?.navigationBar.tintColor = metaWhiteStatus ? UIColor.white : UIColor.black
-                    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: metaWhiteStatus ? UIColor.white : UIColor.black]
                 }
                 let mst = meta!["show-title"]
+                if (mst != nil) {
+                    metaShowTitle = mst! == "true"
+                }
                 let mss = meta!["show-secondary"]
                 if (mss != nil) {
                     metaShowSecondary = mss! == "true"
@@ -179,18 +183,20 @@ public class WebContainerViewController: UIViewController, WebDelegate {
                 if (mstit != nil) {
                     metaSecondaryTitle = mstit!
                 }
-                if (mst != nil) {
-                    metaShowTitle = mst! == "true"
-                    self.navigationController?.setNavigationBarHidden(!metaShowTitle, animated: true)
-                    if (metaShowTitle) {
-                        if (metaShowSecondary) {
-                            generateSecondaryBarItem()
-                        }
-                    } else {
-                        generateBackBtn()
-                        if (metaShowSecondary) {
-                            generateSecondaryBtn()
-                        }
+                self.navigationController?.setNavigationBarHidden(!metaShowTitle, animated: true)
+                if (metaShowTitle) {
+                    self.title = metaTitle
+                    self.navigationController?.navigationBar.barTintColor = UIColor.parseString(metaBackgroundColor)
+                    self.navigationController?.navigationBar.barStyle = metaWhiteStatus ? UIBarStyle.black : UIBarStyle.default
+                    self.navigationController?.navigationBar.tintColor = metaWhiteStatus ? UIColor.white : UIColor.black
+                    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: metaWhiteStatus ? UIColor.white : UIColor.black]
+                    if (metaShowSecondary) {
+                        generateSecondaryBarItem()
+                    }
+                } else {
+                    generateBackBtn()
+                    if (metaShowSecondary) {
+                        generateSecondaryBtn()
                     }
                 }
             }
