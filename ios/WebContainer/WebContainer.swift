@@ -149,6 +149,21 @@ public class WebContainer: UIView, UIScrollViewDelegate, WKNavigationDelegate, W
             wv.load(URLRequest(url: URL(string: url)!))
         }
     }
+    
+    public func load(_ url: String, callback: @escaping (String?) -> String?) {
+        let req = URLRequest(url: URL(string: url)!)
+        URLSession.shared.dataTask(with: req) { (data, resp, err) in
+            if (data != nil) {
+                let pre = String(data: data!, encoding: .utf8)
+                let html = callback(pre)
+                if (html != nil) {
+                    self.mainThread {
+                        self.wv.loadHTMLString(html!, baseURL: URL(string: url)!)
+                    }
+                }
+            }
+        }.resume()
+    }
 
     public func loadLocal(_ file: String, _ path: String) {
         let p = Bundle.main.path(forResource: file, ofType: "", inDirectory: path)!

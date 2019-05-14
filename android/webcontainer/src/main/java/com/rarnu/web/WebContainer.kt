@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.text.Html
 import android.util.AttributeSet
 import android.util.Log
 import android.view.ViewGroup
@@ -13,6 +14,10 @@ import android.widget.RelativeLayout
 import com.rarnu.kt.android.alert
 import com.rarnu.web.picker.FilePicker
 import com.rarnu.web.picker.PickDialog
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.android.Android
+import io.ktor.client.request.get
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -89,6 +94,29 @@ class WebContainer : RelativeLayout {
             c.flush()
         }
         wv.loadUrl(url)
+    }
+
+    fun load(url: String, proc: (String?) -> String?) {
+        coroutine {
+            var html: String? = null
+            val client = HttpClient(Android) {
+                engine {
+                    connectTimeout = 100_000
+                    socketTimeout = 100_000
+                }
+            }
+            try {
+                val pre = client.get<String>(url) { }
+                html = proc(pre)
+            } catch (e: Exception) {
+
+            } finally {
+                client.close()
+            }
+            coroutineMain {
+                wv.loadDataWithBaseURL(url, html, "text/html", "UTF-8", null)
+            }
+        }
     }
 
     fun loadLocal(filename: String, path: String) {
@@ -300,3 +328,6 @@ private fun String.toCookie() = split(";").map { it.trim() }.map {
     Pair<String, Any>(kv[0].trim(), kv[1].trim())
 }.toMap()
 
+fun coroutine(block: suspend () -> Unit) { CoroutineScope(Dispatchers.IO).launch { block() } }
+
+fun coroutineMain(block: suspend () -> Unit) { CoroutineScope(Dispatchers.Main).launch { block() } }

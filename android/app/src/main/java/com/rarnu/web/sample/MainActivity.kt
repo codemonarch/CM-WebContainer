@@ -38,7 +38,9 @@ class MainActivity : Activity(), View.OnClickListener, WebDelegate, WebContainer
             ret
         }
         wc.delegate = this
-        wc.loadLocal("index.html", "Pages")
+        // wc.loadLocal("index.html", "Pages")
+
+        wc.load("https://www.baidu.com") { it }
 
     }
 

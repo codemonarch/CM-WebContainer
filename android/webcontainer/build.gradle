@@ -4,10 +4,20 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 28
+
+    packagingOptions {
+        exclude 'META-INF/kotlinx-io.kotlin_module'
+        exclude 'META-INF/atomicfu.kotlin_module'
+        exclude 'META-INF/kotlinx-coroutines-io.kotlin_module'
+        exclude 'META-INF/kotlinx-coroutines-core.kotlin_module'
+    }
+
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "com.github.rarnu:ktfunctional:0.8.5"
-    implementation 'com.android.support:support-v4:28.0.0'
+    implementation "com.android.support:support-v4:28.0.0"
+    implementation "io.ktor:ktor-client-android:$ktor_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1"
 }

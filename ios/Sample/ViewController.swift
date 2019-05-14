@@ -35,10 +35,9 @@ class ViewController: UIViewController, WebDelegate, WebContainerViewControllerD
                 ret = ["a": a * 2, "b": b * 3]
             }
             return ret
-        }
-        
+        }        
         wc.loadLocal("index.html", "Pages")
-        
+
     }
     
     @objc func btnClicked(_ sender: Any) {

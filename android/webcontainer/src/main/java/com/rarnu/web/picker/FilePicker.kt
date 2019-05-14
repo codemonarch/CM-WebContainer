@@ -25,7 +25,7 @@ object FilePicker {
         val fDest = File(fDir, "${UUID.randomUUID()}.jpg")
         val fUri = FileProvider.getUriForFile(context, "${context.packageName}.cmw.provider", fDest)
         inTake.putExtra(MediaStore.EXTRA_OUTPUT, fUri)
-        context.startActivityForResult(inTake) { code, data ->
+        context.startActivityForResult(inTake) { code, _ ->
             var retData: Uri? = null
             if (code == Activity.RESULT_OK) {
                 if (fDest.exists()) {

@@ -4,6 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
+    packagingOptions {
+        exclude 'META-INF/kotlinx-io.kotlin_module'
+        exclude 'META-INF/atomicfu.kotlin_module'
+        exclude 'META-INF/kotlinx-coroutines-io.kotlin_module'
+        exclude 'META-INF/kotlinx-coroutines-core.kotlin_module'
+    }
 }
 
 dependencies {
